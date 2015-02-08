@@ -1,6 +1,10 @@
 # Text
 *.txt
 
+# OSX
+*.DS_Store
+*.dSYM
+
 # Object files
 *.o
 *.ko
