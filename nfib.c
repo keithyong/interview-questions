@@ -36,7 +36,13 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    long long int x = fib(strtol(argv[1], NULL, 10), strtol(argv[2], NULL, 10));
+    int arg1 = strtol(argv[1], NULL, 10);
+    int arg2 = strtol(argv[2], NULL, 10);
+
+    if (arg2 > MAX_SIZE)
+        printf("Input too big! Max input for argument two is %d", MAX_SIZE);
+
+    long long int x = fib(arg1, arg2);
     printf("x = %lld\n", x);
 
     end = clock();
