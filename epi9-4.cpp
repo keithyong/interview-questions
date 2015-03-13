@@ -1,11 +1,14 @@
+// EPI9-4
 #include <iostream>
 #include <string>
 #include <stack>
+#include <deque>
 
 using std::cout;
 using std::endl;
 using std::string;
 using std::stack;
+using std::deque;
 
 class Pair {
     public:
@@ -20,12 +23,31 @@ Pair::Pair(char p, int i) {
 }
 
 // Copy by value
-void printStack(stack<Pair> s) {
-    while (s.empty() == false) {
-        cout << s.top().paren << " ";
-        cout << s.top().index << endl;
-        s.pop();
+void printStack(stack<Pair> st) {
+    while (st.empty() == false) {
+        cout << st.top().paren << " ";
+        cout << st.top().index << endl;
+        st.pop();
     }
+}
+
+void printDeque(const deque<int>& dq) {
+    deque<int>::const_iterator it;
+    for (it = dq.begin(); it != dq.end(); it++) {
+        cout << *it << " ";
+    }
+    cout << endl;
+}
+
+// Convert a stack<Pair> to deque<int>.
+deque<int> convertToIndexDeque(stack<Pair>& st) {
+    deque<int> dq;
+    while (st.empty() == false) {
+        dq.push_front(st.top().index);
+        st.pop();
+    }
+    printDeque(dq);
+    return dq;
 }
 
 string longestMatchingSubstring(string s) {
@@ -51,9 +73,10 @@ string longestMatchingSubstring(string s) {
             }
         }
     }
-
     printStack(st);
+    deque<int> nonMatches = convertToIndexDeque(st);
 
+    
     return result;
 }
 
