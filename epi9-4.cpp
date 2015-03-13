@@ -1,4 +1,4 @@
-// EPI9-4 Write a function that takes as input a string s made up of the characters '(' and ')', and returns a maximum length substring of s in which the parens are matched.
+// EPI9-4 Write a function that takes as input a string s made up of the characters '(' and ')', and returns a maximum length substring of s in which the parens are matched.  
 #include <iostream>
 #include <string>
 #include <stack>
@@ -46,7 +46,8 @@ deque<int> convertToIndexDeque(stack<Pair>& st) {
         dq.push_front(st.top().index);
         st.pop();
     }
-    printDeque(dq);
+    dq.push_front(-1);
+
     return dq;
 }
 
@@ -73,15 +74,24 @@ string longestMatchingSubstring(string s) {
             }
         }
     }
-    printStack(st);
-    deque<int> nonMatches = convertToIndexDeque(st);
+
+    // Smaller input checking
+    if (st.empty() == true) {
+        return s;
+    } else if (st.size() == s.length()) {
+        return "NO MATCHES FOUND";
+    }
+
+    // Convert what is remaining of our stack into non_matches 
+    deque<int> non_matches = convertToIndexDeque(st);
+
     deque<string> matches;
-    // Grabs all the substrings between every two nonMatches integers
+    // Grabs all the substrings between every two non_matches integers
     // and adds it to matches array.
-    for (int i = 0; i < nonMatches.size() - 1; i++) {
-        int range1 = nonMatches[i] + 1;
-        int substr_count = nonMatches[i + 1] - range1;
-        matches.push_front(s.substr(range1, substr_count));
+    for (int i = 0; i < non_matches.size() - 1; i++) {
+        int start = non_matches[i] + 1;
+        int char_count = non_matches[i + 1] - start;
+        matches.push_front(s.substr(start, char_count));
     }
 
     deque<string>::iterator dq_it;
@@ -99,8 +109,12 @@ string longestMatchingSubstring(string s) {
 }
 
 int main() {
+    // (())()
     string test1 = "((())()(()(";
     string test2 = ")()())(())()()(())((";
+    string test3 = "()(";
+    string test4 = "()()()()(";
     cout << longestMatchingSubstring(test1) << endl;
     cout << longestMatchingSubstring(test2) << endl;
+    cout << longestMatchingSubstring(test3) << endl;
 }
