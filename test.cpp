@@ -7,5 +7,5 @@ using std::cout;
 int main() {
     string s = "hello";
     string p = "((())()(()(";
-    cout << p.substr(1, 7);
+    cout << *(s.end() - 1);
 }

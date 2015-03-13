@@ -1,4 +1,6 @@
 // EPI9-4 Write a function that takes as input a string s made up of the characters '(' and ')', and returns a maximum length substring of s in which the parens are matched.  
+#define CATCH_CONFIG_MAIN
+#include "catch.hh"
 #include <iostream>
 #include <string>
 #include <stack>
@@ -40,13 +42,17 @@ void printDeque(const deque<int>& dq) {
 }
 
 // Convert a stack<Pair> to deque<int>.
-deque<int> convertToIndexDeque(stack<Pair>& st) {
+deque<int> convertToIndexDeque(stack<Pair>& st, string::size_type strlen) {
     deque<int> dq;
     while (st.empty() == false) {
         dq.push_front(st.top().index);
         st.pop();
     }
+
+    // We need to cap out the deque front and back.
     dq.push_front(-1);
+    dq.push_back(strlen);
+
 
     return dq;
 }
@@ -57,6 +63,8 @@ string longestMatchingSubstring(string s) {
     
     // Stack for paren completion
     stack<Pair> st;
+
+    string::size_type strlen = s.size();
 
     // Loop through the string
     string::iterator str_it;
@@ -78,13 +86,12 @@ string longestMatchingSubstring(string s) {
     // Smaller input checking
     if (st.empty() == true) {
         return s;
-    } else if (st.size() == s.length()) {
+    } else if (st.size() == strlen) {
         return "NO MATCHES FOUND";
     }
 
     // Convert what is remaining of our stack into non_matches 
-    deque<int> non_matches = convertToIndexDeque(st);
-
+    deque<int> non_matches = convertToIndexDeque(st, strlen);
     deque<string> matches;
     // Grabs all the substrings between every two non_matches integers
     // and adds it to matches array.
@@ -108,13 +115,12 @@ string longestMatchingSubstring(string s) {
     return result;
 }
 
-int main() {
-    // (())()
-    string test1 = "((())()(()(";
-    string test2 = ")()())(())()()(())((";
-    string test3 = "()(";
-    string test4 = "()()()()(";
-    cout << longestMatchingSubstring(test1) << endl;
-    cout << longestMatchingSubstring(test2) << endl;
-    cout << longestMatchingSubstring(test3) << endl;
+TEST_CASE("Longest matching strings are computed", "[parens]") {
+    REQUIRE(longestMatchingSubstring(")()())(())()()(())((") == "(())()()(())");
+    REQUIRE(longestMatchingSubstring("()(") == "()");
+    REQUIRE(longestMatchingSubstring("()(()()()") == "()()()");
+    REQUIRE(longestMatchingSubstring("(((((((") == "NO MATCHES FOUND");
+    REQUIRE(longestMatchingSubstring(")") == "NO MATCHES FOUND");
+    REQUIRE(longestMatchingSubstring("()") == "()");
+    REQUIRE(longestMatchingSubstring("((((((((()((())))))))))))") == "((((((((()((()))))))))))");
 }
