@@ -1,4 +1,4 @@
-// EPI9-4
+// EPI9-4 Write a function that takes as input a string s made up of the characters '(' and ')', and returns a maximum length substring of s in which the parens are matched.
 #include <iostream>
 #include <string>
 #include <stack>
@@ -58,13 +58,13 @@ string longestMatchingSubstring(string s) {
     stack<Pair> st;
 
     // Loop through the string
-    string::iterator it;
+    string::iterator str_it;
     int count = 0;
-    for (it = s.begin(); it != s.end(); it++, count++) {
-        if (*it == '(') {
+    for (str_it = s.begin(); str_it != s.end(); str_it++, count++) {
+        if (*str_it == '(') {
             st.push(Pair('(', count));
         }
-        else if (*it == ')') {
+        else if (*str_it == ')') {
             // If stack is not empty and the top is a '('...
             if (st.empty() == false && st.top().paren == '(') {
                 st.pop();
@@ -75,14 +75,32 @@ string longestMatchingSubstring(string s) {
     }
     printStack(st);
     deque<int> nonMatches = convertToIndexDeque(st);
+    deque<string> matches;
+    // Grabs all the substrings between every two nonMatches integers
+    // and adds it to matches array.
+    for (int i = 0; i < nonMatches.size() - 1; i++) {
+        int range1 = nonMatches[i] + 1;
+        int substr_count = nonMatches[i + 1] - range1;
+        matches.push_front(s.substr(range1, substr_count));
+    }
 
-    
+    deque<string>::iterator dq_it;
+    int maxlen = -1;
+    int currlen;
+    for (dq_it = matches.begin(); dq_it != matches.end(); dq_it++) {
+        currlen = (*dq_it).length();
+        if (maxlen < currlen) {
+            maxlen = currlen;
+            result = *dq_it;
+        }
+    }
+
     return result;
 }
 
 int main() {
     string test1 = "((())()(()(";
     string test2 = ")()())(())()()(())((";
-    longestMatchingSubstring(test1);
-    longestMatchingSubstring(test2);
+    cout << longestMatchingSubstring(test1) << endl;
+    cout << longestMatchingSubstring(test2) << endl;
 }
