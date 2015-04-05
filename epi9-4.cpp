@@ -1,4 +1,5 @@
-// EPI9-4 Write a function that takes as input a string s made up of the characters '(' and ')', and returns a maximum length substring of s in which the parens are matched.  
+/* EPI9-4 Write a function that takes as input a string s made up of the characters '(' and ')', and returns a maximum length substring of s in which the parens are matched. */  
+
 #define CATCH_CONFIG_MAIN
 #include "catch.hh"
 #include <iostream>
@@ -60,13 +61,14 @@ deque<int> convertToIndexDeque(stack<Pair>& st, string::size_type strlen) {
 string longestMatchingSubstring(string s) {
     // Resultant substring to return.
     string result;
-    
+
     // Stack for paren completion
     stack<Pair> st;
 
     string::size_type strlen = s.size();
 
-    // Loop through the string
+    // Loop through the string push/pop to stack. If ) found,
+    // then we push it onto the stack if there is no matching (.
     string::iterator str_it;
     int count = 0;
     for (str_it = s.begin(); str_it != s.end(); str_it++, count++) {
@@ -122,5 +124,6 @@ TEST_CASE("Longest matching strings are computed", "[parens]") {
     REQUIRE(longestMatchingSubstring("(((((((") == "NO MATCHES FOUND");
     REQUIRE(longestMatchingSubstring(")") == "NO MATCHES FOUND");
     REQUIRE(longestMatchingSubstring("()") == "()");
+    REQUIRE(longestMatchingSubstring("())))))))()()((((") == "()()");
     REQUIRE(longestMatchingSubstring("((((((((()((())))))))))))") == "((((((((()((()))))))))))");
 }

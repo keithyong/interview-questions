@@ -83,8 +83,5 @@ int main() {
     /* three->left = six; */
     /* three->right = seven; */
 
-    inorder(one);
-    cout << endl;
-    cout << height(one);
     cout << isBalanced(one);
 }
